@@ -1,7 +1,11 @@
 package pl.com.foks.reporest;
 
-public class UserNotFoundException extends RuntimeException {
-  public UserNotFoundException(String message) {
-    super(message);
-  }
+import lombok.Getter;
+import org.springframework.http.HttpStatus;
+
+@Getter
+public class UserNotFoundException extends NotFoundException {
+    public UserNotFoundException(HttpStatus status, String message) {
+        super(status, message);
+    }
 }

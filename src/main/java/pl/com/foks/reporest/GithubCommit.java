@@ -1,4 +1,4 @@
 package pl.com.foks.reporest;
 
-public class GithubCommit {
+public record GithubCommit(String sha) {
 }

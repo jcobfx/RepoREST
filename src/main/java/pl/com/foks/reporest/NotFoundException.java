@@ -1,7 +1,14 @@
 package pl.com.foks.reporest;
 
-public class NotFoundException extends RuntimeException {
-  public NotFoundException(String message) {
-    super(message);
-  }
+import lombok.Getter;
+import org.springframework.http.HttpStatus;
+
+@Getter
+public abstract class NotFoundException extends RuntimeException {
+    private final HttpStatus status;
+
+    public NotFoundException(HttpStatus status, String message) {
+        super(message);
+        this.status = status;
+    }
 }

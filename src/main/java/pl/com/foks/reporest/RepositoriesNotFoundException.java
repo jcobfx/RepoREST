@@ -1,7 +1,11 @@
 package pl.com.foks.reporest;
 
-public class RepositoriesNotFoundException extends RuntimeException {
-  public RepositoriesNotFoundException(String message) {
-    super(message);
-  }
+import lombok.Getter;
+import org.springframework.http.HttpStatus;
+
+@Getter
+public class RepositoriesNotFoundException extends NotFoundException {
+    public RepositoriesNotFoundException(HttpStatus status, String message) {
+        super(status, message);
+    }
 }

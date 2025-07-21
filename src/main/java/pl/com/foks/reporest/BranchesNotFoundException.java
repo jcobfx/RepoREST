@@ -1,7 +1,9 @@
 package pl.com.foks.reporest;
 
-public class BranchesNotFoundException extends RuntimeException {
-  public BranchesNotFoundException(String message) {
-    super(message);
-  }
+import org.springframework.http.HttpStatus;
+
+public class BranchesNotFoundException extends NotFoundException {
+    public BranchesNotFoundException(HttpStatus status, String message) {
+        super(status, message);
+    }
 }

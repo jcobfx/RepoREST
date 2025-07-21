@@ -1,4 +1,4 @@
 package pl.com.foks.reporest;
 
-public class GithubUser {
+public record GithubUser(String login) {
 }

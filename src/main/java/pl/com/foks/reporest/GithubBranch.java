@@ -1,4 +1,4 @@
 package pl.com.foks.reporest;
 
-public class GithubBranch {
+public record GithubBranch(String name, GithubCommit commit) {
 }
