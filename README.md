@@ -154,7 +154,7 @@ fetch('http://localhost:8080/repos?username=octocat')
 
 ## Dependencies
 
-- Spring Boot 3.5
+- Spring Boot 3.5.3
 - Spring Web
 - Lombok
 - Spring RestClient
