@@ -1,6 +1,6 @@
-# RepoREST
+# RepoInfo
 
-RepoREST is a RESTful API for retrieving GitHub repository information. It provides a simplified interface to fetch non-forked repositories and their branches for a specified GitHub user.
+RepoInfo is a RESTful API for retrieving GitHub repository information. It provides a simplified interface to fetch non-forked repositories and their branches for a specified GitHub user.
 
 ## Overview
 
@@ -22,8 +22,8 @@ This Spring Boot application serves as a wrapper around GitHub's API, offering t
 
 1. Clone the repository:
    ```
-   git clone https://github.com/yourusername/RepoREST.git
-   cd RepoREST
+   git clone https://github.com/jcobfx/RepoInfo.git
+   cd RepoInfo
    ```
 
 2. Build the application:
@@ -156,7 +156,6 @@ fetch('http://localhost:8080/repos?username=octocat')
 
 - Spring Boot 3.5.3
 - Spring Web
-- Lombok
 - Spring RestClient
 
 ## License

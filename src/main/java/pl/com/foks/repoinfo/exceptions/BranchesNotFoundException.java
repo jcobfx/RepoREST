@@ -1,4 +1,4 @@
-package pl.com.foks.reporest;
+package pl.com.foks.repoinfo.exceptions;
 
 import org.springframework.http.HttpStatus;
 

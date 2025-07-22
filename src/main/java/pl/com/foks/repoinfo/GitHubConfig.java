@@ -1,4 +1,4 @@
-package pl.com.foks.reporest;
+package pl.com.foks.repoinfo;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Map;
 
 @Configuration
-public class RepoRestConfig {
+public class GitHubConfig {
 
     @Value("${github.api.url}")
     private String githubApiUrl;

@@ -1,8 +1,9 @@
-package pl.com.foks.reporest;
+package pl.com.foks.repoinfo;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import pl.com.foks.repoinfo.exceptions.NotFoundException;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {

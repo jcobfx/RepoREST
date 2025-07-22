@@ -1,13 +1,13 @@
-package pl.com.foks.reporest;
+package pl.com.foks.repoinfo;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class RepoRestApplication {
+public class RepoInfoApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(RepoRestApplication.class, args);
+        SpringApplication.run(RepoInfoApplication.class, args);
     }
 
 }

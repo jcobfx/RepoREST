@@ -1,4 +1,4 @@
-package pl.com.foks.reporest;
+package pl.com.foks.repoinfo;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -6,9 +6,12 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.http.ResponseEntity;
+import org.springframework.context.annotation.Import;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
+import org.springframework.test.context.bean.override.mockito.MockitoSpyBean;
 import org.springframework.test.web.servlet.MockMvc;
+import pl.com.foks.repoinfo.model.GitHubBranch;
+import pl.com.foks.repoinfo.model.GitHubRepo;
 
 import java.io.IOException;
 
@@ -21,36 +24,40 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@WebMvcTest(GithubController.class)
-public class GithubMockTests {
+@WebMvcTest(ReposController.class)
+@Import(ReposService.class)
+public class ReposControllerMockTests {
     @Autowired
     private MockMvc mockMvc;
 
     @MockitoBean
-    private GithubService githubService;
+    private GitHubService githubService;
 
-    private static GithubRepo[] githubRepos;
-    private static GithubBranch[] githubBranches;
+    @MockitoSpyBean
+    private ReposService reposService;
+
+    private static GitHubRepo[] gitHubRepos;
+    private static GitHubBranch[] gitHubBranches;
 
     @BeforeAll
     public static void setUp() throws IOException {
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 
-        githubRepos = objectMapper.readValue(GithubMockTests.class.getResourceAsStream("/responses/github-repos.json"), GithubRepo[].class);
-        githubBranches = objectMapper.readValue(GithubMockTests.class.getResourceAsStream("/responses/github-branches.json"), GithubBranch[].class);
+        gitHubRepos = objectMapper.readValue(ReposControllerMockTests.class.getResourceAsStream("/responses/github-repos.json"), GitHubRepo[].class);
+        gitHubBranches = objectMapper.readValue(ReposControllerMockTests.class.getResourceAsStream("/responses/github-branches.json"), GitHubBranch[].class);
 
-        assertThat(githubRepos).isNotNull();
-        assertThat(githubBranches).isNotNull();
+        assertThat(gitHubRepos).isNotNull();
+        assertThat(gitHubBranches).isNotNull();
     }
 
     @Test
     public void should_ReturnRepositoryWithBranches_When_UserExists() throws Exception {
         // Given
         when(githubService.userExists("octocat")).thenReturn(true);
-        when(githubService.getGithubRepos("octocat")).thenReturn(ResponseEntity.ok(githubRepos));
-        when(githubService.getGithubBranches("octocat", "Hello-World"))
-                .thenReturn(ResponseEntity.ok(githubBranches));
+        when(githubService.getGitHubRepos("octocat")).thenReturn(gitHubRepos);
+        when(githubService.getGitHubBranches("octocat", "Hello-World"))
+                .thenReturn(gitHubBranches);
 
         // When
         var resultActions = this.mockMvc.perform(get("/repos?username=octocat"))
@@ -83,12 +90,12 @@ public class GithubMockTests {
     }
 
     @Test
-    public void should_ThrowReposNotFoundException_When_ReposAreNull() throws Exception {
+    public void should_ReturnEmptyList_When_ReposAreEmpty() throws Exception {
         // Given
         when(githubService.userExists("octocat"))
                 .thenReturn(true);
-        when(githubService.getGithubRepos("octocat"))
-                .thenReturn(ResponseEntity.ok(null));
+        when(githubService.getGitHubRepos("octocat"))
+                .thenReturn(new GitHubRepo[0]);
 
         // When
         var resultActions = this.mockMvc.perform(get("/repos?username=octocat"))
@@ -96,18 +103,19 @@ public class GithubMockTests {
 
         // Then
         resultActions
-                .andExpect(status().isNotFound());
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$", hasSize(0)));
     }
 
     @Test
-    public void should_ThrowBranchesNotFoundException_When_BranchesAreNull() throws Exception {
+    public void should_ReturnReposWithEmptyBranches_When_BranchesAreEmpty() throws Exception {
         // Given
         when(githubService.userExists("octocat"))
                 .thenReturn(true);
-        when(githubService.getGithubRepos("octocat"))
-                .thenReturn(ResponseEntity.ok(githubRepos));
-        when(githubService.getGithubBranches("octocat", "Hello-World"))
-                .thenReturn(ResponseEntity.ok(null));
+        when(githubService.getGitHubRepos("octocat"))
+                .thenReturn(gitHubRepos);
+        when(githubService.getGitHubBranches("octocat", "Hello-World"))
+                .thenReturn(new GitHubBranch[0]);
 
         // When
         var resultActions = this.mockMvc.perform(get("/repos?username=octocat"))
@@ -115,6 +123,10 @@ public class GithubMockTests {
 
         // Then
         resultActions
-                .andExpect(status().isNotFound());
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$", hasSize(1)))
+                .andExpect(jsonPath("$[0].name", is("Hello-World")))
+                .andExpect(jsonPath("$[0].ownerLogin", is("octocat")))
+                .andExpect(jsonPath("$[0].branches", hasSize(0)));
     }
 }
