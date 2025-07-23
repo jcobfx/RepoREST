@@ -1,26 +1,26 @@
-package pl.com.foks.repoinfo;
+package pl.com.foks.repoinfo.github;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClient;
 import pl.com.foks.repoinfo.exceptions.BranchesNotFoundException;
 import pl.com.foks.repoinfo.exceptions.RepositoriesNotFoundException;
-import pl.com.foks.repoinfo.model.GitHubBranch;
-import pl.com.foks.repoinfo.model.GitHubRepo;
+import pl.com.foks.repoinfo.github.model.GitHubBranch;
+import pl.com.foks.repoinfo.github.model.GitHubRepo;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
 @Service
 public class GitHubService {
-    private final RestClient restClient;
+    private final RestClient gitHubRestClient;
 
-    public GitHubService(RestClient restClient) {
-        this.restClient = restClient;
+    public GitHubService(RestClient gitHubRestClient) {
+        this.gitHubRestClient = gitHubRestClient;
     }
 
-    boolean userExists(String username) {
+    public boolean userExists(String username) {
         AtomicBoolean userExists = new AtomicBoolean(true);
-        restClient.get()
+        gitHubRestClient.get()
                 .uri("/users/{username}", username)
                 .retrieve()
                 .onStatus(status -> status.isSameCodeAs(HttpStatus.NOT_FOUND),
@@ -30,7 +30,7 @@ public class GitHubService {
     }
 
     public GitHubRepo[] getGitHubRepos(String username) {
-        var repos = restClient.get()
+        var repos = gitHubRestClient.get()
                 .uri("/users/{username}/repos", username)
                 .retrieve()
                 .toEntity(GitHubRepo[].class);
@@ -42,7 +42,7 @@ public class GitHubService {
     }
 
     public GitHubBranch[] getGitHubBranches(String username, String repoName) {
-        var branches = restClient.get()
+        var branches = gitHubRestClient.get()
                 .uri("/repos/{username}/{repoName}/branches", username, repoName)
                 .retrieve()
                 .toEntity(GitHubBranch[].class);

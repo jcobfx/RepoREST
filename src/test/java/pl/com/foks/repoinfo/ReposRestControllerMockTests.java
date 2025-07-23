@@ -10,8 +10,9 @@ import org.springframework.context.annotation.Import;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.context.bean.override.mockito.MockitoSpyBean;
 import org.springframework.test.web.servlet.MockMvc;
-import pl.com.foks.repoinfo.model.GitHubBranch;
-import pl.com.foks.repoinfo.model.GitHubRepo;
+import pl.com.foks.repoinfo.github.GitHubService;
+import pl.com.foks.repoinfo.github.model.GitHubBranch;
+import pl.com.foks.repoinfo.github.model.GitHubRepo;
 
 import java.io.IOException;
 
@@ -24,9 +25,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@WebMvcTest(ReposController.class)
+@WebMvcTest(ReposRestController.class)
 @Import(ReposService.class)
-public class ReposControllerMockTests {
+public class ReposRestControllerMockTests {
     @Autowired
     private MockMvc mockMvc;
 
@@ -44,8 +45,8 @@ public class ReposControllerMockTests {
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 
-        gitHubRepos = objectMapper.readValue(ReposControllerMockTests.class.getResourceAsStream("/responses/github-repos.json"), GitHubRepo[].class);
-        gitHubBranches = objectMapper.readValue(ReposControllerMockTests.class.getResourceAsStream("/responses/github-branches.json"), GitHubBranch[].class);
+        gitHubRepos = objectMapper.readValue(ReposRestControllerMockTests.class.getResourceAsStream("/responses/github-repos.json"), GitHubRepo[].class);
+        gitHubBranches = objectMapper.readValue(ReposRestControllerMockTests.class.getResourceAsStream("/responses/github-branches.json"), GitHubBranch[].class);
 
         assertThat(gitHubRepos).isNotNull();
         assertThat(gitHubBranches).isNotNull();

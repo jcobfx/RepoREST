@@ -8,10 +8,10 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-public class ReposController {
+public class ReposRestController {
     private final ReposService reposService;
 
-    public ReposController(ReposService reposService) {
+    public ReposRestController(ReposService reposService) {
         this.reposService = reposService;
     }
 

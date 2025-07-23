@@ -1,7 +1,7 @@
 package pl.com.foks.repoinfo;
 
-import pl.com.foks.repoinfo.model.GitHubBranch;
-import pl.com.foks.repoinfo.model.GitHubRepo;
+import pl.com.foks.repoinfo.github.model.GitHubBranch;
+import pl.com.foks.repoinfo.github.model.GitHubRepo;
 
 import java.util.List;
 

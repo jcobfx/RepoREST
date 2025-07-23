@@ -1,4 +1,4 @@
-package pl.com.foks.repoinfo;
+package pl.com.foks.repoinfo.github;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -20,8 +20,8 @@ public class GitHubConfig {
     @Value("${github.api.data-type}")
     private String githubApiDataType;
 
-    @Bean
-    public RestClient restClient() {
+    @Bean(name = "gitHubRestClient")
+    public RestClient gitHubRestClient() {
         return RestClient.builder()
                 .baseUrl(githubApiUrl)
                 .defaultHeaders(headers -> headers

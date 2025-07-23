@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import pl.com.foks.repoinfo.exceptions.BranchesNotFoundException;
 import pl.com.foks.repoinfo.exceptions.RepositoriesNotFoundException;
 import pl.com.foks.repoinfo.exceptions.UserNotFoundException;
+import pl.com.foks.repoinfo.github.GitHubService;
 
 import java.util.List;
 import java.util.stream.Stream;
@@ -19,21 +20,21 @@ public class ReposService {
 
     public List<ReposResponseDTO.RepoApiDTO> getRepos(String username) {
         if (githubService.userExists(username)) {
-            var repos = githubService.getGitHubRepos(username);
-            if (repos == null) {
+            var gitHubRepos = githubService.getGitHubRepos(username);
+            if (gitHubRepos == null) {
                 throw new RepositoriesNotFoundException(HttpStatus.NOT_FOUND,
                         "Repositories are null for user: " + username);
 
             }
-            return Stream.of(repos)
+            return Stream.of(gitHubRepos)
                     .map(repo -> {
-                        var branches = githubService.getGitHubBranches(username, repo.name());
-                        if (branches == null) {
+                        var gitHubBranches = githubService.getGitHubBranches(username, repo.name());
+                        if (gitHubBranches == null) {
                             throw new BranchesNotFoundException(HttpStatus.NOT_FOUND,
                                     "Branches are null for repository: " + repo.name());
                         }
 
-                        return new ReposResponseDTO.RepoApiDTO(repo, List.of(branches));
+                        return new ReposResponseDTO.RepoApiDTO(repo, List.of(gitHubBranches));
                     })
                     .toList();
         } else {
